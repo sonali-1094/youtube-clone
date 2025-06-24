@@ -1,0 +1,33 @@
+.video-page {
+  padding: 1rem;
+  flex: 1;
+  background-color: #f9f9f9;
+}
+
+.video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 1rem;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.video-details h2 {
+  margin: 0 0 10px;
+}
+
+.channel-name {
+  color: #606060;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #333;
+}

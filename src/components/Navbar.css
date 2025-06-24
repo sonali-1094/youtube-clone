@@ -1,0 +1,58 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 10px 20px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-left, .nav-middle, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  gap: 10px;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: red;
+}
+
+.nav-middle {
+  flex: 1;
+  justify-content: center;
+  gap: 5px;
+}
+
+.nav-middle input {
+  padding: 8px 12px;
+  width: 60%;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.icon {
+  font-size: 1.3rem;
+  margin-left: 15px;
+  cursor: pointer;
+  color: #333;
+}
+
+.youtube-icon {
+  color: red;
+  font-size: 1.7rem;
+}
+
+.profile-icon {
+  font-size: 1.5rem;
+  border-radius: 50%;
+  background-color: #ddd;
+  padding: 4px;
+}

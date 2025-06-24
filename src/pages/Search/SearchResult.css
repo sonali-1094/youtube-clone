@@ -1,0 +1,15 @@
+.search-results {
+  padding: 1rem;
+  flex: 1;
+  background-color: #f9f9f9;
+}
+
+.search-results h2 {
+  margin-bottom: 1rem;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
