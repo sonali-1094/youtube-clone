@@ -1,37 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './Home.css';
 import VideoCard from '../../components/VideoCard';
-
-const API_KEY = 'AIzaSyB45v9fhe2d4sZl5z6O0ECUtsiGgF9korw';
+import { fetchVideosByQuery, parseYoutubeError } from '../../lib/youtube';
 
 const Home = ({ selectedCategory }) => {
   const [videos, setVideos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    axios
-      .get('https://www.googleapis.com/youtube/v3/search', {
-        params: {
-          part: 'snippet',
-          maxResults: 12,
-          q: selectedCategory, // 🟢 Dynamic category
-          key: API_KEY,
-          type: 'video',
-        },
-      })
-      .then((res) => setVideos(res.data.items))
-      .catch((err) => console.error(err));
-  }, [selectedCategory]); // 🟢 Triggers re-fetch on category change
+    const loadVideos = async () => {
+      setIsLoading(true);
+      setError('');
+
+      try {
+        const categoryQuery = selectedCategory === 'Home' ? 'Popular on YouTube' : selectedCategory;
+        const items = await fetchVideosByQuery(categoryQuery, { maxResults: 16 });
+        setVideos(items);
+      } catch (err) {
+        setError(parseYoutubeError(err));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadVideos();
+  }, [selectedCategory]);
 
   return (
-    <div className="home">
-      <h2>{selectedCategory} Videos</h2>
-      <div className="video-grid">
-        {videos.map((video) => (
-          <VideoCard key={video.id.videoId || video.id.channelId} video={video} />
-        ))}
-      </div>
-    </div>
+    <section className="home">
+      <header className="home-hero">
+        <p className="hero-label">Now Discovering</p>
+        <h1>{selectedCategory} Videos</h1>
+        <p>Fresh picks and creator stories curated around your selected topic.</p>
+      </header>
+
+      {isLoading && <div className="status-card">Loading videos...</div>}
+      {error && <div className="status-card error">{error}</div>}
+
+      {!isLoading && !error && (
+        <div className="video-grid">
+          {videos.map((video) => (
+            <VideoCard key={video.id.videoId || video.id} video={video} />
+          ))}
+        </div>
+      )}
+    </section>
   );
 };
 

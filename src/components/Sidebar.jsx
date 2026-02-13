@@ -1,15 +1,16 @@
 import React from 'react';
 import './Sidebar.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { AiFillHome } from 'react-icons/ai';
 import { FaCar, FaGamepad, FaMusic, FaBlog, FaThumbsUp, FaHistory } from 'react-icons/fa';
-import { MdOutlineMovie, MdSportsCricket } from 'react-icons/md';
+import { MdOutlineMovie, MdSportsCricket, MdTrendingUp } from 'react-icons/md';
 import { FiMonitor } from 'react-icons/fi';
 import { BsNewspaper } from 'react-icons/bs';
 
 const categories = [
-  { name: 'Home', icon: <AiFillHome />, path: '/' },
+  { name: 'Trending', icon: <MdTrendingUp /> },
+  { name: 'Home', icon: <AiFillHome /> },
   { name: 'History', icon: <FaHistory /> },
   { name: 'Liked Videos', icon: <FaThumbsUp /> },
   { name: 'Games', icon: <FaGamepad /> },
@@ -22,29 +23,32 @@ const categories = [
   { name: 'News', icon: <BsNewspaper /> },
 ];
 
-const Sidebar = ({ selectedCategory, onSelectCategory }) => {
+const Sidebar = ({ selectedCategory, onSelectCategory, isOpen, onClose }) => {
+  const navigate = useNavigate();
+
+  const handleSelect = (categoryName) => {
+    onSelectCategory(categoryName);
+    navigate('/');
+    onClose();
+  };
+
   return (
-    <div className="sidebar">
-      {categories.map((cat) => (
-        <div
-          key={cat.name}
-          className={`sidebar-item ${selectedCategory === cat.name ? 'active' : ''}`}
-          onClick={() => onSelectCategory(cat.name)}
-        >
-          {cat.path ? (
-            <Link to={cat.path} className="sidebar-link">
-              {cat.icon}
-              <span>{cat.name}</span>
-            </Link>
-          ) : (
-            <>
-              {cat.icon}
-              <span>{cat.name}</span>
-            </>
-          )}
-        </div>
-      ))}
-    </div>
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <h3 className="sidebar-title">Discover</h3>
+      <div className="sidebar-items">
+        {categories.map((cat) => (
+          <button
+            key={cat.name}
+            type="button"
+            className={`sidebar-item ${selectedCategory === cat.name ? 'active' : ''}`}
+            onClick={() => handleSelect(cat.name)}
+          >
+            <span className="sidebar-icon">{cat.icon}</span>
+            <span>{cat.name}</span>
+          </button>
+        ))}
+      </div>
+    </aside>
   );
 };
 

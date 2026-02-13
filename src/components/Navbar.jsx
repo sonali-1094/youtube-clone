@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Navbar.css';
 import { FaSearch, FaYoutube } from 'react-icons/fa';
 import { IoMdNotificationsOutline } from 'react-icons/io';
@@ -6,42 +6,65 @@ import { MdMoreVert } from 'react-icons/md';
 import { FiUpload } from 'react-icons/fi';
 import MenuIcon from './MenuIcon';
 
-// Clerk imports
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ onMenuClick }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    const trimmedQuery = searchTerm.trim();
+    if (!trimmedQuery) return;
+
+    navigate(`/search/${encodeURIComponent(trimmedQuery)}`);
+  };
+
   return (
     <nav className="navbar">
-      {/* Left: Logo + Menu */}
       <div className="nav-left">
-        <MenuIcon />
-        <FaYoutube className="icon youtube-icon" />
-        <div className="logo-text">YouTube</div>
+        <MenuIcon onClick={onMenuClick} />
+        <button type="button" className="brand-btn" onClick={() => navigate('/')}>
+          <FaYoutube className="youtube-icon" />
+          <span className="logo-text">YouTube Clone</span>
+        </button>
       </div>
 
-      {/* Middle: Search */}
-      <div className="nav-middle">
-        <input type="text" placeholder="Search..." />
-        <FaSearch className="icon search-icon" />
-      </div>
+      <form className="nav-middle" onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          placeholder="Search videos, creators, topics"
+          aria-label="Search videos"
+        />
+        <button type="submit" className="search-btn" aria-label="Search">
+          <FaSearch className="search-icon" />
+        </button>
+      </form>
 
-      {/* Right: Auth + Icons */}
       <div className="nav-right">
-        <FiUpload className="icon" />
-        <IoMdNotificationsOutline className="icon" />
-        <MdMoreVert className="icon" />
+        <SignedIn>
+          <button type="button" className="icon-btn" aria-label="Upload video">
+            <FiUpload className="icon" />
+          </button>
+          <button type="button" className="icon-btn" aria-label="Notifications">
+            <IoMdNotificationsOutline className="icon" />
+          </button>
+          <button type="button" className="icon-btn" aria-label="More options">
+            <MdMoreVert className="icon" />
+          </button>
+        </SignedIn>
 
-        {/* Clerk Authentication Controls */}
         <SignedOut>
-          {/* Show Sign In button if user is logged out */}
           <SignInButton mode="modal">
-            <button className="sign-in-btn">Sign In</button>
+            <button className="sign-in-btn" type="button">Sign In</button>
           </SignInButton>
         </SignedOut>
 
         <SignedIn>
-          {/* Show User Avatar and dropdown when logged in */}
           <UserButton afterSignOutUrl="/sign-in" />
         </SignedIn>
       </div>

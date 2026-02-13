@@ -1,13 +1,11 @@
 import React from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 
-const MenuIcon = ({ toggleMenu }) => {
+const MenuIcon = ({ onClick }) => {
   return (
-    <GiHamburgerMenu
-      size={24}
-      onClick={toggleMenu}
-      style={{ cursor: 'pointer' }}
-    />
+    <button type="button" className="menu-btn" onClick={onClick} aria-label="Toggle menu">
+      <GiHamburgerMenu size={20} />
+    </button>
   );
 };
 

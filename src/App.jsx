@@ -4,80 +4,86 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import './App.css';
 
-// Pages
 import Home from './pages/Home/Home';
 import VideoPage from './pages/Video/VideoPage';
 import SearchResults from './pages/Search/SearchResult';
 
-// Clerk imports
 import {
   SignIn,
   SignUp,
   SignedIn,
   SignedOut,
-  RedirectToSignIn
+  RedirectToSignIn,
 } from '@clerk/clerk-react';
 
+const ProtectedRoute = ({ children }) => (
+  <>
+    <SignedIn>{children}</SignedIn>
+    <SignedOut>
+      <RedirectToSignIn />
+    </SignedOut>
+  </>
+);
+
 const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('Trending');
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setSidebarOpen(false);
+  };
 
   return (
-    <>
-      <Navbar />
+    <div className="app-shell">
+      <Navbar onMenuClick={() => setSidebarOpen((prev) => !prev)} />
+
       <div className="main-layout">
-        {/* Sidebar only visible after login */}
         <SignedIn>
           <Sidebar
             selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
+            onSelectCategory={handleCategorySelect}
+            isOpen={isSidebarOpen}
+            onClose={() => setSidebarOpen(false)}
           />
+          {isSidebarOpen && <button className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar" />}
         </SignedIn>
 
-        <div className="content">
+        <main className="content">
           <Routes>
-            {/* Clerk Authentication Routes */}
             <Route path="/sign-in/*" element={<SignIn routing="path" path="/sign-in" />} />
             <Route path="/sign-up/*" element={<SignUp routing="path" path="/sign-up" />} />
 
-            {/* Protected Routes */}
             <Route
               path="/"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <Home selectedCategory={selectedCategory} />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/video/:id"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <VideoPage />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/search/:query"
               element={
-                <SignedIn>
+                <ProtectedRoute>
                   <SearchResults />
-                </SignedIn>
+                </ProtectedRoute>
               }
             />
 
-            {/* Redirect all unknown routes to sign in */}
-            <Route
-              path="*"
-              element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              }
-            />
+            <Route path="*" element={<RedirectToSignIn />} />
           </Routes>
-        </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 
