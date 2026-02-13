@@ -4,9 +4,9 @@ import { FaSearch, FaYoutube } from 'react-icons/fa';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { MdMoreVert } from 'react-icons/md';
 import { FiUpload } from 'react-icons/fi';
+import { CgProfile } from 'react-icons/cg';
 import MenuIcon from './MenuIcon';
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ onMenuClick }) => {
@@ -46,27 +46,18 @@ const Navbar = ({ onMenuClick }) => {
       </form>
 
       <div className="nav-right">
-        <SignedIn>
-          <button type="button" className="icon-btn" aria-label="Upload video">
-            <FiUpload className="icon" />
-          </button>
-          <button type="button" className="icon-btn" aria-label="Notifications">
-            <IoMdNotificationsOutline className="icon" />
-          </button>
-          <button type="button" className="icon-btn" aria-label="More options">
-            <MdMoreVert className="icon" />
-          </button>
-        </SignedIn>
-
-        <SignedOut>
-          <SignInButton mode="modal">
-            <button className="sign-in-btn" type="button">Sign In</button>
-          </SignInButton>
-        </SignedOut>
-
-        <SignedIn>
-          <UserButton afterSignOutUrl="/sign-in" />
-        </SignedIn>
+        <button type="button" className="icon-btn" aria-label="Upload video">
+          <FiUpload className="icon" />
+        </button>
+        <button type="button" className="icon-btn" aria-label="Notifications">
+          <IoMdNotificationsOutline className="icon" />
+        </button>
+        <button type="button" className="icon-btn" aria-label="More options">
+          <MdMoreVert className="icon" />
+        </button>
+        <button type="button" className="icon-btn" aria-label="Profile">
+          <CgProfile className="icon" />
+        </button>
       </div>
     </nav>
   );
